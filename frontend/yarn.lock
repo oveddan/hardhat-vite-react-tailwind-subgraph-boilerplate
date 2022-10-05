@@ -825,6 +825,11 @@ JSONStream@^1.3.5:
     jsonparse "^1.2.0"
     through ">=2.2.7 <3"
 
+abitype@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/abitype/-/abitype-0.1.4.tgz#9e8cff858523396f9e4954888a2622e43ffc8865"
+  integrity sha512-A2FErrvkbsx1Pg/8TG/khmQihVVQCN7QtXvtb47kyyBjlmR0uFrve3M5Y/WAr3JALwGsvdHbDLHjJM1xfWBc9g==
+
 acorn-node@^1.8.2:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/acorn-node/-/acorn-node-1.8.2.tgz#114c95d64539e53dede23de8b9d96df7c7ae2af8"
