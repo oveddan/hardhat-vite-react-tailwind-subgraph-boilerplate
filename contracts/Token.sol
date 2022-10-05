@@ -7,7 +7,7 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/CountersUpgradeable.sol";
 
-contract DansTestToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeable, OwnableUpgradeable {
+contract Token is Initializable, ERC721Upgradeable, ERC721URIStorageUpgradeable, OwnableUpgradeable {
     using CountersUpgradeable for CountersUpgradeable.Counter;
 
     CountersUpgradeable.Counter private _tokenIdCounter;
@@ -18,7 +18,7 @@ contract DansTestToken is Initializable, ERC721Upgradeable, ERC721URIStorageUpgr
     }
 
     function initialize() initializer public {
-        __ERC721_init("DansTestToken", "MTK");
+        __ERC721_init("Token", "MTK");
         __ERC721URIStorage_init();
         __Ownable_init();
     }
