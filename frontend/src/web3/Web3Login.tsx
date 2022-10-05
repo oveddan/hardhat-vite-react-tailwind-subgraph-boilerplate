@@ -1,7 +1,7 @@
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const Web3Login = () => {
-  return <ConnectButton showBalance={false} />;
+  return <ConnectButton />;
 };
 
 export default Web3Login;
