@@ -11,6 +11,8 @@ contract Token is ERC721, ERC721URIStorage, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
+    event SafeMint(uint256 tokenId, address to, string uri);
+
     constructor() ERC721("MyToken", "MTK") {}
 
     function _baseURI() internal pure override returns (string memory) {
@@ -22,6 +24,7 @@ contract Token is ERC721, ERC721URIStorage, Ownable {
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, uri);
+        emit SafeMint(tokenId, to, uri);
     }
 
     // The following functions are overrides required by Solidity.

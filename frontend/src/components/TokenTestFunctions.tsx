@@ -1,7 +1,8 @@
 import { GetContractArgs } from '@wagmi/core';
 import { useState } from 'react';
-import { useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi';
+import { useContract, useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import useTokenContractAddressAndAbi from '../hooks/useTokenContractAddressAndAbi';
+import { Token, SafeMintCall } from '../../../subgraph/generated/Token/Token';
 
 const TokenOwnerId = ({ getContractArgs }: { getContractArgs: GetContractArgs }) => {
   const { data, isError, isLoading } = useContractRead({
@@ -28,6 +29,7 @@ const MintForm = ({ getContractArgs }: { getContractArgs: GetContractArgs }) => 
     functionName: 'safeMint',
     args,
   });
+
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
   return (

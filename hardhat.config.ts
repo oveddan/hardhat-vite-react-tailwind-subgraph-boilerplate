@@ -8,7 +8,7 @@ const ALCHEMY_API_KEY = '7JOHPLbiPe75KZ3OBykXYwjZiHwcmX2x';
 // To export your private key from Metamask, open Metamask and
 // go to Account Details > Export Private Key
 // Beware: NEVER put real Ether into testing accounts
-const GOERLI_PRIVATE_KEY = '0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a';
+const GOERLI_PRIVATE_KEY = '2b0ff6875209eb835eff51dbede43a1b8c71de97271923f8818d7afe4f405aba';
 
 module.exports = {
   solidity: '0.8.9',

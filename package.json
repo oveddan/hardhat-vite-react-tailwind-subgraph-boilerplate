@@ -5,15 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "run-hardhat": "npx hardhat node",
+    "chain": "npx hardhat node",
+    "start": "cd frontend && yarn dev",
     "deploy-local": "npx hardhat --network localhost run scripts/deploy.js",
     "deploy-goerli": "npx hardhat --network goerli run scripts/deploy.js",
     "clean-graph-node": "rm -rf graph-container/data/",
     "run-graph-node": "cd graph-container && docker-compose up",
-    "graph-create-local": "graph create --node http://localhost:8020/ scaffold-eth/your-contract",
-    "graph-ship-local": "yarn graphql-code-generator && yarn graph-build --network localhost && yarn graph-deploy-local",
-    "codegen": "graph codegen",
-    "graph-codegen": "graphql-codegen --config codegen.yml"
+    "graph-create-local": "graph create --node http://localhost:8020/ token",
+    "graph-ship-local": "yarn graph-codegen && yarn graph-build --network localhost && yarn graph-deploy-local",
+    "graph-deploy-local": "cd subgraph && graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 token && cd ..",
+    "graph-codegen": "cd subgraph && yarn codegen && cd ..",
+    "graph-build": "cd subgraph && graph build && cd .."
   },
   "author": "",
   "license": "ISC",
@@ -22,7 +24,7 @@
     "@ethersproject/providers": "^5.4.7",
     "@graphprotocol/graph-cli": "^0.29.1",
     "@graphprotocol/graph-ts": "^0.26.0",
-    "@graphql-codegen/cli": "2.13.4",
+    "@graphql-codegen/cli": "2.13.5",
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
@@ -50,5 +52,8 @@
     "@openzeppelin/contracts": "^4.7.3",
     "@openzeppelin/contracts-upgradeable": "^4.8.0-rc.1",
     "graphql": "^16.6.0"
+  },
+  "resolutions": {
+    "undici": "5.5.1"
   }
 }
