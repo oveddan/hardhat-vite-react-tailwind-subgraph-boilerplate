@@ -1,13 +1,5 @@
-# Sample Hardhat Project
+# Boilerplate template for a project with hardhat, typescript, react, vite, and a subgraph
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+This is a template repository for the way I like to work with react and smart contracts on the ethereum blockchain.
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
-```
+ToDo: setup instructions
