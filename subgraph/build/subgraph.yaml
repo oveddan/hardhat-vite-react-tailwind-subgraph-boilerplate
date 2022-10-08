@@ -2,21 +2,20 @@ specVersion: 0.0.4
 schema:
   file: schema.graphql
 dataSources:
-  - kind: ethereum
+  - kind: ethereum/contract
     name: Token
     network: localhost
     source:
       address: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
       abi: Token
+      startBlock: 1
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
-        - Approval
-        - ApprovalForAll
-        - OwnershipTransferred
-        - Transfer
+        - Purpose
+        - Sender
       abis:
         - name: Token
           file: frontend/src/contracts/localhost/Token.json
