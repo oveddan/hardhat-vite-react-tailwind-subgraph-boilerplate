@@ -1,12 +1,14 @@
 import { GetContractArgs } from '@wagmi/core';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useContract, useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi';
 import useTokenContractAddressAndAbi from '../hooks/useTokenContractAddressAndAbi';
+import { abi } from '../contracts/localhost/abi';
 import { Token, SafeMintCall } from '../../../subgraph/generated/Token/Token';
 
-const TokenOwnerId = ({ getContractArgs }: { getContractArgs: GetContractArgs }) => {
+const TokenOwnerId = ({ getContractArgs }: { getContractArgs: Pick<GetContractArgs, 'address'> }) => {
   const { data, isError, isLoading } = useContractRead({
-    ...getContractArgs,
+    abi,
+    address: getContractArgs.address,
     functionName: 'owner',
   });
 
@@ -18,28 +20,32 @@ const TokenOwnerId = ({ getContractArgs }: { getContractArgs: GetContractArgs })
 };
 
 const MintForm = ({ getContractArgs }: { getContractArgs: GetContractArgs }) => {
-  const [to, setTo] = useState<string>('0x70997970C51812dc3A010C7d01b50e0d17dc79C8');
+  const [to, setTo] = useState<`0x${string}`>('0x70997970C51812dc3A010C7d01b50e0d17dc79C8');
   const [ipfsHash, setIpfsHash] = useState<string>('asdfasdfasdfa');
 
-  const args = [to, ipfsHash];
+  const args: [`0x${string}`, string] = [to, ipfsHash];
 
   const { config, error, isError } = usePrepareContractWrite({
-    addressOrName: getContractArgs.addressOrName,
-    contractInterface: getContractArgs.contractInterface,
+    address: getContractArgs.address,
+    abi,
     functionName: 'safeMint',
     args,
   });
 
   const { data, isLoading, isSuccess, write } = useContractWrite(config);
 
+  const handleSubmit = useCallback(() => {
+    if (write) {
+      write();
+    }
+  }, [write]);
+
   return (
     <>
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (write) {
-            write();
-          }
+          handleSubmit();
         }}
       >
         <legend>Mint Token</legend>
@@ -54,7 +60,10 @@ const MintForm = ({ getContractArgs }: { getContractArgs: GetContractArgs }) => 
             placeholder="0x000"
             required
             value={to}
-            onChange={(e) => setTo(e.target.value)}
+            onChange={(e) =>
+              // @ts-ignore
+              setTo(e.target.value)
+            }
           />
         </div>
         <div className="mb-6">
