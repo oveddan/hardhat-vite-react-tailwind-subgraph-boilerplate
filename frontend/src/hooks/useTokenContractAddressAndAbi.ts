@@ -1,44 +1,30 @@
 import { useEffect, useMemo, useState } from 'react';
 import { chain } from 'wagmi';
 import { useAccount } from 'wagmi';
-import localHostAddress from '../contracts/localhost/contract-address.json';
-import localHostContract from '../contracts/localhost/Token.json';
-import goerliHostAddress from '../contracts/goerli/contract-address.json';
-import goerilHostContract from '../contracts/goerli/Token.json';
-import { ContractInterface } from 'ethers';
+import addresses from '../contracts/addresses.json';
 
-export type GetContractArgs = {
-  /** Contract address or ENS name */
-  addressOrName: string;
-  /** Contract interface or ABI */
-  contractInterface: ContractInterface;
-  /** Signer or provider to attach to contract */
-};
+const getContractAddress = (chainId: number): string => {
+  const chains = Object.values(chain);
 
-const getContractAddressAndAbi = (chainId: number | undefined): GetContractArgs | null => {
-  if (!chainId) return null;
+  const chainForId = chains.find((x) => x.id === chainId);
 
-  if (chainId === chain.hardhat.id) {
-    return {
-      addressOrName: localHostAddress.Token,
-      contractInterface: localHostContract.abi,
-    };
+  if (!chainForId) {
+    throw new Error(`invalid chain id ${chainForId}`);
   }
 
-  if (chainId === chain.goerli.id) {
-    return {
-      addressOrName: goerliHostAddress.Token,
-      contractInterface: goerilHostContract.abi,
-    };
-  }
+  const chainName = chainForId.name;
 
-  throw new Error('invalid chain id');
+  const genericAddresses = addresses as { [address: string]: string };
+
+  if (!genericAddresses[chainName]) throw new Error(`contract not deployed for chain ${chainName}`);
+
+  return genericAddresses[chainName];
 };
 
-const useTokenContractAddressAndAbi = () => {
+const useTokenContractAddress = () => {
   const { connector: activeConnector, isConnected } = useAccount();
 
-  const [contractArgs, setContractArgs] = useState<GetContractArgs | null>(null);
+  const [contractAddress, setContractAddress] = useState<string | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -46,14 +32,13 @@ const useTokenContractAddressAndAbi = () => {
 
       if (!chainId) return;
 
-      console.log({ chainId });
-      const addressAndAbi = getContractAddressAndAbi(chainId);
+      const addressAndAbi = getContractAddress(chainId);
 
-      setContractArgs(addressAndAbi);
+      setContractAddress(addressAndAbi);
     })();
   }, [activeConnector, isConnected]);
 
-  return contractArgs;
+  return contractAddress;
 };
 
-export default useTokenContractAddressAndAbi;
+export default useTokenContractAddress;

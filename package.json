@@ -10,6 +10,7 @@
     "start": "cd frontend && yarn dev",
     "deploy-local": "npx hardhat --network localhost run scripts/deploy.ts",
     "deploy-goerli": "npx hardhat --network goerli run scripts/deploy.ts",
+    "deploy-mumbai": "npx hardhat --network mumbai run scripts/deploy.ts",
     "clean-graph-node": "rm -rf graph-container/data/",
     "run-graph-node": "cd graph-container && docker-compose up",
     "graph-create-local": "graph create --node http://localhost:8020/ token",

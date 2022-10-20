@@ -1,14 +1,14 @@
 import { GetContractArgs } from '@wagmi/core';
 import { useCallback, useState } from 'react';
 import { useContract, useContractRead, useContractWrite, usePrepareContractWrite } from 'wagmi';
-import useTokenContractAddressAndAbi from '../hooks/useTokenContractAddressAndAbi';
-import { abi } from '../contracts/localhost/abi';
+import useTokenContractAddress from '../hooks/useTokenContractAddressAndAbi';
+import { abi } from '../contracts/abi';
 import { Token, SafeMintCall } from '../../../subgraph/generated/Token/Token';
 
-const TokenOwnerId = ({ getContractArgs }: { getContractArgs: Pick<GetContractArgs, 'address'> }) => {
+const TokenOwnerId = ({ contractAddress }: { contractAddress: string }) => {
   const { data, isError, isLoading } = useContractRead({
     abi,
-    address: getContractArgs.address,
+    address: contractAddress,
     functionName: 'owner',
   });
 
@@ -19,14 +19,14 @@ const TokenOwnerId = ({ getContractArgs }: { getContractArgs: Pick<GetContractAr
   );
 };
 
-const MintForm = ({ getContractArgs }: { getContractArgs: GetContractArgs }) => {
+const MintForm = ({ contractAddress }: { contractAddress: string }) => {
   const [to, setTo] = useState<`0x${string}`>('0x70997970C51812dc3A010C7d01b50e0d17dc79C8');
   const [ipfsHash, setIpfsHash] = useState<string>('asdfasdfasdfa');
 
   const args: [`0x${string}`, string] = [to, ipfsHash];
 
   const { config, error, isError } = usePrepareContractWrite({
-    address: getContractArgs.address,
+    address: contractAddress,
     abi,
     functionName: 'safeMint',
     args,
@@ -96,14 +96,14 @@ const MintForm = ({ getContractArgs }: { getContractArgs: GetContractArgs }) => 
 };
 
 const TokenTestFunctions = () => {
-  const contractAddressAndAbi = useTokenContractAddressAndAbi();
+  const contractAddress = useTokenContractAddress();
 
-  if (!contractAddressAndAbi) return <h3>Missing abi</h3>;
+  if (!contractAddress) return <h3>Missing abi</h3>;
 
   return (
     <>
-      <TokenOwnerId getContractArgs={contractAddressAndAbi} />
-      <MintForm getContractArgs={contractAddressAndAbi} />
+      <TokenOwnerId contractAddress={contractAddress} />
+      <MintForm contractAddress={contractAddress} />
     </>
   );
 };

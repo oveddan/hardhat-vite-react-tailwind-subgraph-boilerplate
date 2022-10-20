@@ -5,12 +5,16 @@ import path from 'path';
 import '@nomiclabs/hardhat-ethers';
 import { artifacts, network, ethers } from 'hardhat';
 import { MyToken } from '../typechain-types';
-import { writeFile } from 'fs';
+import { writeFile, mkdir, existsSync, readFile } from 'fs';
 import { promisify } from 'util';
+import { Utf8ErrorFuncs } from 'ethers/lib/utils';
 const writeFileAsync = promisify(writeFile);
+const readFileAsync = promisify(readFile);
+const mkdirAsync = promisify(mkdir);
 
 async function main() {
   // This is just a convenience check
+
   if (network.name === 'hardhat') {
     console.warn(
       'You are trying to deploy a contract to the Hardhat Network, which' +
@@ -36,26 +40,51 @@ async function main() {
   await saveFrontendFiles(deployedContract);
 }
 
-async function saveFrontendFiles(token: MyToken) {
-  const fs = require('fs');
-  const contractsDir = path.join(__dirname, '..', 'frontend', 'src', 'contracts', network.name);
+const contractsDir = path.join(__dirname, '..', 'frontend', 'src', 'contracts');
 
-  if (!fs.existsSync(contractsDir)) {
-    fs.mkdirSync(contractsDir);
-  }
-
-  fs.writeFileSync(
-    path.join(contractsDir, 'contract-address.json'),
-    JSON.stringify({ Token: token.address }, undefined, 2),
-  );
-
+async function writeAbi() {
   const ContractArtifact = await artifacts.readArtifact('MyToken');
-
-  await writeFileAsync(path.join(contractsDir, 'Contract.json'), JSON.stringify(ContractArtifact, null, 2));
 
   const abiTs = `export const abi = ${JSON.stringify(ContractArtifact.abi, null, 2)} as const`;
 
   await writeFileAsync(path.join(contractsDir, 'abi.ts'), abiTs);
+}
+
+const contractAddressesFile = path.join(contractsDir, 'addresses.json');
+
+type Addresses = {
+  [network: string]: string;
+};
+
+async function writeContractAddress(token: MyToken) {
+  let currentAddresses: Addresses;
+
+  if (!existsSync(contractAddressesFile)) {
+    currentAddresses = {};
+  } else {
+    currentAddresses = JSON.parse(
+      await readFileAsync(contractAddressesFile, {
+        encoding: 'utf-8',
+      }),
+    ) as Addresses;
+  }
+
+  const updatedAddresses = {
+    ...currentAddresses,
+    [network.name]: token.address,
+  };
+
+  await writeFileAsync(contractAddressesFile, JSON.stringify(updatedAddresses, undefined, 2));
+}
+
+async function saveFrontendFiles(token: MyToken) {
+  if (!existsSync(contractsDir)) {
+    await mkdirAsync(contractsDir);
+  }
+
+  await writeContractAddress(token);
+
+  await writeAbi();
 }
 
 main()
