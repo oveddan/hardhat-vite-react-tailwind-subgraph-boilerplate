@@ -23,3 +23,7 @@ artifacts
 
 graph-container/bin
 graph-container/data
+
+.env
+
+.DS_STORE
