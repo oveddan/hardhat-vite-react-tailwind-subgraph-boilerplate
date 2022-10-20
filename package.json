@@ -1,13 +1,14 @@
 {
-  "name": "hardhad-tutorial",
+  "name": "@eth-vite-dapp-scaffold/monorepo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "chain": "npx hardhat node",
     "compile": "npx hardhat compile",
-    "start": "cd frontend && yarn dev",
+    "start": "yarn workspace @eth-vite-dapp-scaffold/frontend dev",
     "deploy-local": "npx hardhat --network localhost run scripts/deploy.ts",
     "deploy-goerli": "npx hardhat --network goerli run scripts/deploy.ts",
     "deploy-mumbai": "npx hardhat --network mumbai run scripts/deploy.ts",
@@ -59,5 +60,8 @@
   },
   "resolutions": {
     "undici": "5.5.1"
-  }
+  },
+  "workspaces": [
+    "frontend"
+  ]
 }

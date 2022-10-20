@@ -12,7 +12,11 @@ const getContractAddress = (chainId: number): string => {
     throw new Error(`invalid chain id ${chainForId}`);
   }
 
-  const chainName = chainForId.name;
+  let chainName = chainForId.name;
+
+  if (chainName === 'Hardhat') {
+    chainName = 'localhost';
+  }
 
   const genericAddresses = addresses as { [address: string]: string };
 
